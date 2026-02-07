@@ -109,3 +109,6 @@ Planning to add video generation, background music, and news aggregation feature
 Check out the code on GitHub: [Your GitHub link]
 
 #Automation #AI #n8n #OpenAI #CloudComputing #WorkflowAutomation #TechProjects
+
+
+<img width="1280" height="800" alt="Screenshot 2026-02-07 at 11 11 39" src="https://github.com/user-attachments/assets/efa15867-e994-4f3f-a27b-38b49075d621" />
