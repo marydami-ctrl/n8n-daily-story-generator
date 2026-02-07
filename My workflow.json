@@ -1,0 +1,194 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d71704f5-a6f4-4151-9f1a-b98145f19eb4",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "Write a 60-90 second emotional story with a strong life lesson.\n\nRequirements:\n- Simple English\n- Short sentences\n- Relatable life situation\n- Rich emotional detail\n- Strong character development\n- End clearly with: Lesson: [the lesson]\n\nOutput ONLY the story text, nothing else. put title, no extra commentary."
+            },
+            {
+              "content": "Write a 15-20 second emotional story with a strong life lesson.\n\nRequirements:\n- Simple English\n- Short sentences\n- Relatable life situation\n- End clearly with: Lesson: [the lesson]\n\nOutput ONLY the story text, nothing else. No titles, no extra commentary."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e6f6b3a1-9d48-480e-b876-b02b20f2a4a4",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "FHkgAICHyeVaI9Sl",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7a40e17f-bb81-48e3-84af-34d48b237930",
+              "name": "data",
+              "value": "=={{ $json.output[0].content[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        0
+      ],
+      "id": "cade08d4-df6a-47cb-b2e1-559e88f31c15",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "data",
+        "options": {
+          "fileName": "=story_{{$now.toISO().split('T')[0]}}.txt"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        768,
+        0
+      ],
+      "id": "3bf59789-a30f-4ee6-81d9-93de3b280e3b",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "name": "=story_{{$now.toISO().split('T')[0]}}.txt",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "root",
+          "mode": "list",
+          "cachedResultName": "/ (Root folder)",
+          "cachedResultUrl": "https://drive.google.com/drive"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        976,
+        0
+      ],
+      "id": "b1110087-d668-4cc3-bc32-fb9a3cd0c79c",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "BsSkVyeVn1Td5K9b",
+          "name": "Google Drive account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "22fb840e-0cb2-45fc-b32d-ce14568b5691",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "43db91267c5f12fc25aa9424d8d451381a53826db32d7c7e9df0e4076adcf900"
+  },
+  "id": "-oz21xsjv_3ev5c9KUsQy",
+  "tags": []
+}
